@@ -3,6 +3,5 @@ import vue from '@vitejs/plugin-vue'
 
 export default defineConfig({
   plugins: [vue()],
-  // 确保构建路径正确
-  base: './'
+  base: '/jike-helper-front/' // 必须加！适配 GitHub Pages 路径
 })
