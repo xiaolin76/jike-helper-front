@@ -259,3 +259,19 @@ const submitError = async () => {
   }
 }
 </style>
+<template>
+  <div>
+    <h1>极客助手前端页面</h1>
+    <p>部署测试成功！</p>
+  </div>
+</template>
+
+<script setup>
+// 暂时空脚本，仅用于测试部署
+</script>
+
+<style scoped>
+h1 {
+  color: #42b983;
+}
+</style>

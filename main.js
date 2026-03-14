@@ -1,3 +1,6 @@
+import { createApp } from 'vue'
+import App from './App.vue'
+createApp(App).mount('#app')
 // 导入Vue核心创建函数
 import { createApp } from 'vue'
 // 导入全局样式
