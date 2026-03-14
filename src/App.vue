@@ -7,7 +7,14 @@
 </template>
 
 <script setup>
-// 暂时清空脚本，移除所有api相关导入
+import { ref } from 'vue'
+const apiResult = ref('')
+async function testApi() {
+  // 调用模拟接口（替换成你的真实接口）
+  const res = await fetch('https://jsonplaceholder.typicode.com/todos/1')
+  const data = await res.json()
+  apiResult.value = `接口返回：${JSON.stringify(data)}`
+}
 </script>
 
 <style scoped>
