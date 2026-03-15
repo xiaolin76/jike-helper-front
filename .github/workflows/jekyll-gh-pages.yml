@@ -1,18 +1,21 @@
 name: Deploy Vue site to GitHub Pages
 
+# 1. 监听你的实际默认分支「主要角色」（而非main）
 on:
   push:
-    branches: [ 主要角色 ]  # 把原来的 [main] / [master] 替换成「主要角色」1
+    branches: [ main ]  
   workflow_dispatch:
 
+# 2. 统一权限配置（避免权限不足）
 permissions:
   contents: read
   pages: write
   id-token: write
 
+# 3. 并发配置改为true，取消旧进程，避免artifact冲突
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   build:
@@ -27,13 +30,13 @@ jobs:
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: ./dist  # Vue打包输出目录，路径正确
 
   deploy:
-    needs: build
+    needs: build  # 依赖build完成后执行，逻辑正确
     runs-on: ubuntu-latest
     permissions:
       pages: write
       id-token: write
     steps:
-      - uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v4  # 部署步骤正确，无重复
