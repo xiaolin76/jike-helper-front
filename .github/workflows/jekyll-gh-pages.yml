@@ -1,42 +1,49 @@
-name: Deploy Vue site to GitHub Pages
+# 最简版 Vue 部署到 GitHub Pages 工作流
+name: Deploy Vue to GitHub Pages
 
-# 1. 监听你的实际默认分支「主要角色」（而非main）
+# 只监听你的默认分支（改成你的分支名，比如「主要角色」）
 on:
   push:
-    branches: [ main ]  
-  workflow_dispatch:
-
-# 2. 统一权限配置（避免权限不足）
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-# 3. 并发配置改为true，取消旧进程，避免artifact冲突
-concurrency:
-  group: pages
-  cancel-in-progress: true
+    branches: [ main ]
+  workflow_dispatch: # 允许手动触发
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-      - run: npm install
-      - run: npm run build
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./dist  # Vue打包输出目录，路径正确
-
   deploy:
-    needs: build  # 依赖build完成后执行，逻辑正确
     runs-on: ubuntu-latest
     permissions:
-      pages: write
-      id-token: write
+      pages: write       # 授予 Pages 部署权限
+      id-token: write    # 授予 ID 令牌权限
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - uses: actions/deploy-pages@v4  # 部署步骤正确，无重复
+      # 1. 拉取代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 2. 安装 Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm' # 缓存依赖，加速构建
+
+      # 3. 安装依赖
+      - name: Install dependencies
+        run: npm install
+
+      # 4. 打包 Vue 项目
+      - name: Build Vue project
+        run: npm run build
+
+      # 5. 上传产物（只执行 1 次！核心：避免多产物）
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist # Vue 打包输出目录，必须正确
+
+      # 6. 部署到 Pages（只执行 1 次！）
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
