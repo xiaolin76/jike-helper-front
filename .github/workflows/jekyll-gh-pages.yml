@@ -2,7 +2,7 @@ name: Deploy Vue site to GitHub Pages
 
 on:
   push:
-    branches: [ 主要角色 ]  # 把原来的 [main] / [master] 替换成「主要角色」
+    branches: [ 主要角色 ]  # 把原来的 [main] / [master] 替换成「主要角色」1
   workflow_dispatch:
 
 permissions:
